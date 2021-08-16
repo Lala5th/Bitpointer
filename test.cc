@@ -28,7 +28,7 @@ void test_memory_leak(){
 int main(){
     bitptr_t bit_ptr = new bit_alloc[SIZE];
     for(size_t i = 0; i < SIZE; ++i){
-        bit_ptr[i] = !(i%3);
+        bit_ptr[i] = (i%3) == 0;
     }
     for(size_t i = 0; i < SIZE; ++i){
         std::cout << bit_ptr[i] << " ";
@@ -44,8 +44,11 @@ int main(){
     assert(bit_ptr - 1 == cache);
     assert(bit_ptr > cache);
 
+    bit_array<48> b_array{};
+    b_array[8] = true;
+
     test_memory_leak(); // Has to be monitored manually.
-    
+
     int i;
     std::cin>>i; // So that even if test_memory_leak wasn't monitored, the memory usage can be checked afterwards
 }

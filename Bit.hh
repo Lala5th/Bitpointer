@@ -172,7 +172,7 @@ struct bit_t{
 
     bit_t& operator=(const bool& val){
         uint8_t mask = 1 << this->pointer_to_bit.offset_ptr;
-        *(this->pointer_to_bit.base_ptr) = ((*(this->pointer_to_bit.base_ptr))^(~mask))|(val ? mask : 0);
+        *(this->pointer_to_bit.base_ptr) = ((*(this->pointer_to_bit.base_ptr))&(~mask))|(val ? mask : 0);
         return *this;
     }
 };
@@ -202,14 +202,6 @@ struct bit_alloc{ // Allocation/deallocation helper. Usage: bitptr_t new_bits = 
         size_t to_be_allocated = ((size - 1)/8) + 1;
         void* allocated = std::malloc(to_be_allocated);
         return allocated;
-    }
-
-    static void operator delete (void* ptr) noexcept {
-        std::free(ptr);
-    }
-
-    static void operator delete[] (void* ptr, size_t) noexcept{
-        std::free(ptr);
     }
 
 };
