@@ -4,9 +4,9 @@ A header only library for manipulating individual bits, through a pointer like c
 
 ## Usage
 
-`bitptr_t` can be treated as a pointer to `bit_t`, a boolean like interface to work with individual bits. `bit_t` is only generally for internal use of the library only. Storing it is inefficient.
+`bitptr_t` can be treated as `bit*` a pointer to a single bit. `bit_t` is functionally equivalent to `bit&` a reference to a bit. Generally `bit_t` is less useful than `bitptr_t` and is mostly provided for internal use of the library. Storing it is inefficient as to access other bits it has to be dereferenced to a `bitptr_t`.
 
-`bitptr_t` can be assinged to the first bit of a memory address:
+To use it `bitptr_t` can be assinged to the first bit of a memory address:
 ```cpp
 uint8_t a;
 bitptr_t bit_ptr(&a);
@@ -21,6 +21,8 @@ or using the helper struct `bit_alloc` one can create dynamic arrays of bits:
 bitptr_t bit_ptr = new bit_alloc[size];
 ```
 While it is not enforced choosing a `size` which is not a multiple of 8 will allocate memory for the smallest amount of bytes still containing `size` bits. Similarly `new bit_alloc` is evaluated but will be equivalent to `new bit_alloc[8]`.
+
+A class is also provided to help in allocating bit arrays named `bit_array<SIZE_IN_BITS>`.
 
 ## Utility
 

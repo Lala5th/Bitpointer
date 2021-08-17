@@ -51,4 +51,12 @@ int main(){
 
     int i;
     std::cin>>i; // So that even if test_memory_leak wasn't monitored, the memory usage can be checked afterwards
+
+    bit_ptr = new bit_alloc[1024*8*1000*40]; // Allocate 40000Kb of memory
+    for(size_t j = 0; j < 1024*1000*8*40;++j)
+        bit_ptr[j] = j%5 == 0;
+        
+    std::cout << "Allocated 40000 Kb Memory\n"; // For checking if proper amound of memory is allocated
+    std::cin>>i;
+
 }

@@ -27,7 +27,7 @@
 struct bit_t;
 struct bit_alloc;
 
-class bitptr_t { // class for representing a pointer to a single bit.
+class bitptr_t { // class for representing a pointer to a single bit. [bit*]
     private:
         char* base_ptr;
         uint8_t offset_ptr;
@@ -145,36 +145,37 @@ class bitptr_t { // class for representing a pointer to a single bit.
 
 };
 
-struct bit_t{
-    bitptr_t pointer_to_bit;
-    
-    bit_t() : pointer_to_bit() {}
+class bit_t{ // class representing a reference to a single bit [bit&]
+    private:
+        bitptr_t pointer_to_bit;
+    public:
+        bit_t() : pointer_to_bit() {}
 
-    bit_t(bitptr_t ptr){
-        pointer_to_bit = ptr;
-    }
+        bit_t(bitptr_t ptr){
+            pointer_to_bit = ptr;
+        }
 
-    bit_t(const bit_t& other){
-        pointer_to_bit = other.pointer_to_bit;
-    }
+        bit_t(const bit_t& other){
+            pointer_to_bit = other.pointer_to_bit;
+        }
 
-    operator bool(){
-        return *(this->pointer_to_bit.base_ptr) & (1 << this->pointer_to_bit.offset_ptr);
-    }
+        operator bool(){
+            return *(this->pointer_to_bit.base_ptr) & (1 << this->pointer_to_bit.offset_ptr);
+        }
 
-    bitptr_t& operator&(){
-        return this->pointer_to_bit;
-    }
+        bitptr_t& operator&(){
+            return this->pointer_to_bit;
+        }
 
-    const bitptr_t& operator&() const{
-        return this->pointer_to_bit;
-    }
+        const bitptr_t& operator&() const{
+            return this->pointer_to_bit;
+        }
 
-    bit_t& operator=(const bool& val){
-        uint8_t mask = 1 << this->pointer_to_bit.offset_ptr;
-        *(this->pointer_to_bit.base_ptr) = ((*(this->pointer_to_bit.base_ptr))&(~mask))|(val ? mask : 0);
-        return *this;
-    }
+        bit_t& operator=(const bool& val){
+            uint8_t mask = 1 << this->pointer_to_bit.offset_ptr;
+            *(this->pointer_to_bit.base_ptr) = ((*(this->pointer_to_bit.base_ptr))&(~mask))|(val ? mask : 0);
+            return *this;
+        }
 };
 
 struct bit_alloc{ // Allocation/deallocation helper. Usage: bitptr_t new_bits = new bit_alloc[bit_num]; delete[] new_bits;
@@ -204,6 +205,20 @@ struct bit_alloc{ // Allocation/deallocation helper. Usage: bitptr_t new_bits = 
         return allocated;
     }
 
+};
+
+template <size_t NUM_BITS>
+struct bit_array { // Helper class for creating bit arrays bit[NUM_BITS]
+    uint8_t byte_array[((NUM_BITS - 1)/8) + 1];
+    bit_array() {}
+
+    operator bitptr_t(){
+        return bitptr_t(&byte_array[0]);
+    }
+
+    bit_t operator[](const size_t& index) {
+        return bitptr_t(&byte_array[0])[index];
+    }
 };
 
 bit_t bitptr_t::operator*(){
