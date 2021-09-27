@@ -56,8 +56,8 @@ class bitptr_t { // class for representing a pointer to a single bit. [bit*]
         bitptr_t& operator=(const bitptr_t&) = default;
         bitptr_t& operator=(bitptr_t&&) = default;
 
-        bit_t operator*();
-        bit_t operator[](size_t);
+        inline bit_t operator*();
+        inline bit_t operator[](size_t);
 
         bitptr_t operator+(const size_t& rhs){
             bitptr_t added_value(*this);
@@ -221,11 +221,11 @@ struct bit_array { // Helper class for creating bit arrays bit[NUM_BITS]
     }
 };
 
-bit_t bitptr_t::operator*(){
+inline bit_t bitptr_t::operator*(){
     return *this;
 }
 
-bit_t bitptr_t::operator[](size_t index){
+inline bit_t bitptr_t::operator[](size_t index){
     return *(*this + index);
 }
 
